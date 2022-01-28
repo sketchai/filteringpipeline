@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict
 
-from src.filters import END_SOURCE_PIPELINE
+from . import END_SOURCE_PIPELINE
 
 
 class AbstractFilter(ABC):

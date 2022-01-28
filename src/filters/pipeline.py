@@ -1,8 +1,8 @@
 from typing import List, Dict
 import logging
 
-from src.filters.abstract_filter import AbstractFilter, SourceFilter
-from src.filters import END_SOURCE_PIPELINE, KO_FILTER_TAG
+from .abstract_filter import AbstractFilter, SourceFilter
+from . import END_SOURCE_PIPELINE, KO_FILTER_TAG
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()

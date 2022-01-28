@@ -1,8 +1,8 @@
 from typing import Dict, List
 from collections import OrderedDict
 
-from src.filters.pipeline import Pipeline
-from src.filters.abstract_filter import SourceFilter, AbstractFilter
+from .pipeline import Pipeline
+from .abstract_filter import SourceFilter, AbstractFilter
 
 import logging
 logging.basicConfig(level=logging.DEBUG)

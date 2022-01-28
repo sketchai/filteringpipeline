@@ -3,9 +3,9 @@ import logging
 import copy
 
 
-from src.filters.abstract_filter import AbstractFilter
-from src.filters.factory import pipeline_factory
-from src.utils.to_dict import update_nested_dict
+from ..abstract_filter import AbstractFilter
+from ..factory import pipeline_factory
+from ...utils.to_dict import update_nested_dict
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
