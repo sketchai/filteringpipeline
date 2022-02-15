@@ -2,6 +2,7 @@ import unittest
 import logging
 
 from tests.asset.mock.mock_abstract_filter import MockFilter
+from src.filters import KO_FILTER_TAG
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -11,21 +12,35 @@ class TestAbstractFilter(unittest.TestCase):
 
     @classmethod
     def setUp(self):
-        self.mock_filter = MockFilter()
-        self.mock_message_1 = {'a': 1, 'b': 2}
-        self.mock_message_2 = {'a': 1}
+        self.mock_filter = MockFilter(conf_filter = {'l_label': ['a', 'b', 'c']})
 
     def test_process(self):
-        logger.debug('Test check')
-        new_message = self.mock_filter.process(self.mock_message_1)
-        self.assertDictEqual(new_message, {'a': 2, 'b': 2})
+        logger.debug('Test process')
 
-    def test_update_wrong_ob(self):
-        logger.debug('Test update wrong ob')
-        self.assertEqual(self.mock_filter.wrong_ob_cnt, 0)
+        # Message 1 : {'a': 1, 'd': 2}
+        message_in = {'a': 1, 'd': 2}
+        message_out = self.mock_filter.process(message_in)
+        self.assertDictEqual(message_out, {'a': 2, 'd': 2})
+        self.assertDictEqual(self.mock_filter.label_counter, {'a' : 1, 'b': 0, 'c':0})
 
-        new_message = self.mock_filter.process(self.mock_message_1)
-        self.assertEqual(self.mock_filter.wrong_ob_cnt, 1)
+        # Message 2 : {'b': 1, 'c': 2}
+        message_in = {'b': 1, 'c': 2}
+        message_out = self.mock_filter.process(message_in)
+        self.assertDictEqual(message_out, {'b': 1, 'c': 2, KO_FILTER_TAG: self.mock_filter.name})
+        self.assertDictEqual(self.mock_filter.label_counter, {'a' : 1, 'b': 1, 'c':1})
 
-        new_message = self.mock_filter.process(self.mock_message_2)
-        self.assertEqual(self.mock_filter.wrong_ob_cnt, 1)
+    def test_last_process(self):
+        logger.debug('Test last_process')
+
+
+        # Message 1 : {'a': 1, 'd': 2}
+        l_messages = [{'a': 1, 'd': 2}, {'b': 1, 'c': 2}]
+        for message_in in l_messages:
+            _ = self.mock_filter.process(message_in)
+
+        last_message = {'a': 1, 'b': 1}
+        message_out = self.mock_filter.last_process(last_message)
+        self.assertDictEqual(message_out, {'a': 2, 'b': 1, 'count' : {'a' : 2, 'b': 2, 'c':1}})
+
+
+

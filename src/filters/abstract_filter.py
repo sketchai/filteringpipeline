@@ -13,6 +13,12 @@ class AbstractFilter(ABC):
     def process(self, message: Dict) -> Dict:
         raise NotImplementedError("process function must be implemented")
 
+    def last_process(self, message: Dict) -> Dict:
+        """
+            This method implements a last action to do. Can be modify if needed.
+        """
+        return self.process(message)
+
 
 class SourceFilter(AbstractFilter):
 
