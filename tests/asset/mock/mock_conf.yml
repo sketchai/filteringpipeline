@@ -11,6 +11,12 @@ Source_A:
   parms:
     l_data: [1,8,6,9,4]
 
+# Pipeline Filters
+PipelineSubFilter:
+  type: PipelineSubFilter
+  parms:
+    l_sub_filters: [MockFilter]
+
 MockFilter:
   type: MockFilter
 
