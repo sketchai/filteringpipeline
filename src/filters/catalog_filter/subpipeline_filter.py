@@ -39,7 +39,6 @@ class SubPipelineFilter(AbstractFilter):
         # Create a new pipeline and update the source
 
         curr_pipeline_conf: Dict = self._update_conf_pipeline(message)  # Update some configuration pipeline
-        logger.info(f'curr_pipeline_conf= {curr_pipeline_conf}')
         pipeline = pipeline_factory(conf=curr_pipeline_conf, catalog_filter=self.catalog_filter)
 
         # Launch the pipeline

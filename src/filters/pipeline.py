@@ -57,7 +57,6 @@ class Pipeline(object):
                 for filter in self._filters:
                     message = filter.process(message)
                     if KO_FILTER_TAG in message:
-                        logger.debug(f'HERE I received {message}')
                         self._pipeline_status = False
                         break
                 if self._pipeline_status:
