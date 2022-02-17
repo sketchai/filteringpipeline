@@ -12,20 +12,19 @@ class MockFilter(AbstractFilter):
         A basic filter that modify its counter, change a message value and add a KO_FILTER_TAG if the wrong element appears in the message.
     """
 
-    def __init__(self, conf_filter: Dict = {}):
+    def __init__(self, conf: Dict = {}):
         super().__init__()
-        self.l_label: Dict = conf_filter.get('l_label')
+        self.l_label: Dict = conf.get('l_label')
         self.name = 'MockFilter'
 
         self.label_counter: Dict = {}
         for label in self.l_label:
             self.label_counter[label] = 0
-            
 
     def process(self, message: object) -> object:
-        logger.debug(f'message received: {message}')
+        logger.debug(f'{self.__class__.__name__}: message received= {message}')
 
-        # Show how to modify class state 
+        # Show how to modify class state
         for label in self.l_label:
             if label in message:
                 self.label_counter[label] += 1
@@ -41,6 +40,6 @@ class MockFilter(AbstractFilter):
         return message
 
     def last_process(self, message: Dict) -> Dict:
-        message = self.process(message)
+        logger.debug(f'{self.__class__.__name__}: last action')
         message['count'] = self.label_counter
-        return message 
+        return message

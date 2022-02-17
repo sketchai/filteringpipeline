@@ -6,7 +6,7 @@ from . import END_SOURCE_PIPELINE
 
 class AbstractFilter(ABC):
 
-    def __init__(self, conf_filter: Dict = {}):
+    def __init__(self, conf: Dict = {}):
         self.wrong_ob_cnt: int = 0
 
     @abstractmethod
@@ -17,7 +17,7 @@ class AbstractFilter(ABC):
         """
             This method implements a last action to do. Can be modify if needed.
         """
-        return self.process(message)
+        return message
 
 
 class SourceFilter(AbstractFilter):

@@ -22,7 +22,7 @@ class TestSource(unittest.TestCase):
         while True:
             try:
                 m = next(gen)
-                out.append(m.get('data'))
+                out.append(m)
             except StopIteration:
                 logger.debug('Stop generator')
                 break
@@ -33,8 +33,8 @@ class TestSource(unittest.TestCase):
         out = []
         message = self.mock_source.process()
 
-        while END_SOURCE_PIPELINE not in message:
-            out.append(message.get('data'))
+        while isinstance(message, int):
+            out.append(message)
             message = self.mock_source.process()
 
         self.assertListEqual(out, self.l_data)
