@@ -19,11 +19,16 @@ class MockSinkFilter(AbstractFilter):
         self.collect_data = []
 
     def process(self, message: Dict) -> Dict:
-        logger.debug(f'Message received: {message}')
-        if END_SOURCE_PIPELINE in message:  # Stop the pipeline
-            logger.info(f'Open and write into a file. Collect data= {self.collect_data}')
-            with open(self.output_path, 'w') as file:
-                file.write(str(self.collect_data))
-        else:
-            self.collect_data.append(message.get('data'))
+        logger.debug(f'-- {self.__class__.__name__}: message received= {message}')
+        self.collect_data.append(message.get('count'))
+        return message
+
+    def last_process(self, message: Dict) -> Dict:
+        logger.debug(f'-- {self.__class__.__name__}: message received= {message}')
+        if message.get('count') is not None:
+            self.collect_data.append(message.get('count'))  # Collect last data
+        logger.debug(f'-- Open and write into a file. Collect data= {self.collect_data}')
+        with open(self.output_path, 'w') as file:
+            file.write(str(self.collect_data))
+
         return message

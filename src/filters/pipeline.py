@@ -40,7 +40,10 @@ class Pipeline(object):
 
     def _process_sink(self, message: Dict) -> None:
         if self._sink is not None:
-            self._sink.process(message)
+            if END_SOURCE_PIPELINE in message:
+                self._sink.last_process(message)
+            else:
+                self._sink.process(message)
 
     def execute(self) -> Dict:
 
@@ -50,15 +53,23 @@ class Pipeline(object):
             if END_SOURCE_PIPELINE in message:  # No more data in the source
                 self._pipeline_status = False
                 break
-            for filter in self._filters:
-                message = filter.process(message)
-                if KO_FILTER_TAG in message:
-                    self._pipeline_status = False
-                    break
-            self._process_sink(message)
+            else:
+                for filter in self._filters:
+                    message = filter.process(message)
+                    if KO_FILTER_TAG in message:
+                        logger.debug(f'HERE I received {message}')
+                        self._pipeline_status = False
+                        break
+                if self._pipeline_status:
+                    self._process_sink(message)
 
         return self.generate_last_message(message)
 
     def generate_last_message(self, message: Dict = {}) -> Dict:
+        for filter in self._filters:
+            message = filter.last_process(message)
+            if KO_FILTER_TAG in message:
+                break
         self._process_sink(message)
+        logger.debug(f'message : {message}')
         return message

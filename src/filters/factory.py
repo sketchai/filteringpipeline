@@ -1,25 +1,46 @@
 from typing import Dict, List
 from collections import OrderedDict
+import copy
 
 from .pipeline import Pipeline
 from .abstract_filter import SourceFilter, AbstractFilter
+from . import GENERAL_CONF_PIPELINE
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
 
-def create_filter(conf: Dict, catalog_filter: Dict) -> AbstractFilter:
+def construct_conf_subpipeline(conf: Dict, l_filters: List) -> Dict:
+    conf_subpipeline = {}
+    l_filters_type = []
+    for filter_name in l_filters:
+        conf_filter = conf.get(filter_name)
+        conf_subpipeline[filter_name] = conf_filter
+        l_filters_type.append(conf_filter.get('type'))
+    return conf_subpipeline, l_filters_type
+
+
+def create_filter(conf: Dict, catalog_filter: Dict, conf_global: Dict = None) -> AbstractFilter:
     _type = conf.get('type')
     _parms = conf.get('parms')
     try:
+        if 'SubPipelineFilter' in _type:
+            l_all_filters = copy.deepcopy(_parms.get('l_filters'))
+            l_all_filters.append(conf.get('source'))
+            conf_subpipeline, l_filters_type = construct_conf_subpipeline(conf_global, l_all_filters)
+            _parms['conf_filter'] = conf_subpipeline
+            _parms['catalog_filter'] = {filter_type: catalog_filter[filter_type] for filter_type in l_filters_type}
+            _parms['conf_filter'][GENERAL_CONF_PIPELINE] = {'source': conf.get('source'),
+                                                            'l_filters': _parms.get('l_filters'),
+                                                            'sink': conf.get('sink')}
         return catalog_filter[_type](_parms)
-    except KeyError:
-        logger.info(f'Filter type {_type} does not exist.')
+    except KeyError as e:
+        logger.info(f'Filter type {_type} does not exist. {e}')
 
 
 def config_parser(conf: Dict) -> object:
-    general_config = conf.get('PipelineFilter')
+    general_config = conf.get(GENERAL_CONF_PIPELINE)
 
     # Create source config dict
     source_name = general_config.get('source')
@@ -52,7 +73,7 @@ def pipeline_factory(conf: Dict, catalog_filter: Dict = None) -> Pipeline:
 
     # Add filters
     for _, conf_filter in filters_config.items():
-        _filter = create_filter(conf_filter, catalog_filter)
+        _filter = create_filter(conf_filter, catalog_filter, conf)
         pipeline.add_filter(_filter)
 
     # Add sink

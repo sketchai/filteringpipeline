@@ -1,4 +1,4 @@
-name: env_prep
+name: my_env
 
 channels:
   - default
