@@ -1,0 +1,14 @@
+stages:
+  - test
+
+
+
+unit-test:
+  image: nexus.retd.edf.fr/python:3
+  stage: test
+  script:
+    - pip install poetry 
+    - poetry install
+    - poetry run pytest
+
+
