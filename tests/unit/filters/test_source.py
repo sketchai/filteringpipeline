@@ -1,8 +1,8 @@
 import unittest
 import logging
 
-from src.filters import END_SOURCE_PIPELINE
-from src.filters.catalog_source.source_list import SourceList
+from filtering_pipeline import END_SOURCE_PIPELINE
+from filtering_pipeline.filters.catalog_source.source_list import SourceList
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()

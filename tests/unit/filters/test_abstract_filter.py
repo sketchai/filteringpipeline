@@ -2,7 +2,7 @@ import unittest
 import logging
 
 from tests.asset.mock.mock_abstract_filter import MockFilter
-from src.filters import KO_FILTER_TAG
+from filtering_pipeline import KO_FILTER_TAG
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -27,7 +27,7 @@ class TestAbstractFilter(unittest.TestCase):
         message_in = {'b': 1, 'c': 2}
         message_out = self.mock_filter.process(message_in)
         self.assertDictEqual(message_out, {'b': 1, 'c': 2, KO_FILTER_TAG: self.mock_filter.name})
-        self.assertDictEqual(self.mock_filter.label_counter, {'a': 1, 'b': 1, 'c': 1})
+        self.assertDictEqual(self.mock_filter.label_counter, {'a': 1, 'b': 0, 'c': 0})
 
     def test_last_process(self):
         logger.debug('Test last_process')
@@ -39,4 +39,4 @@ class TestAbstractFilter(unittest.TestCase):
 
         last_message = {'a': 1, 'b': 1}
         message_out = self.mock_filter.last_process(last_message)
-        self.assertDictEqual(message_out, {'a': 1, 'b': 1, 'count': {'a': 1, 'b': 1, 'c': 1}})
+        self.assertDictEqual(message_out, {'a': 1, 'b': 1, 'count': {'a': 1, 'b': 0, 'c': 0}})

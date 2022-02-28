@@ -3,8 +3,8 @@ import logging
 import copy
 
 from tests.asset.mock.mock_subpipeline_filter import MockSubPipelineFilter
-from src.filters.catalog_source.source_list import SourceList
-from src.utils.to_dict import yaml_to_dict
+from filtering_pipeline.filters.catalog_source.source_list import SourceList
+from filtering_pipeline.utils.to_dict import yaml_to_dict
 
 from tests.asset.mock.mock_abstract_filter import MockFilter
 
@@ -25,9 +25,9 @@ class TestSubPipelineFilter(unittest.TestCase):
         self.subpipeline_filter = MockSubPipelineFilter(conf)
 
     def test_update_conf_pipeline(self):
-        in_message = ['a', 'b', 'c']
+        in_message = {'data' : ['a', 'b', 'c']}
         updated_conf = self.subpipeline_filter._update_conf_pipeline(in_message)
-        self.assertListEqual(updated_conf.get('MySource').get('parms').get('l_data'), in_message)
+        self.assertListEqual(updated_conf.get('MySource').get('parms').get('l_data'), in_message.get('data'))
 
         # Health check
         # -- Check that the dict has not been fully override
@@ -39,21 +39,22 @@ class TestSubPipelineFilter(unittest.TestCase):
     def test_process_1(self):
         l_out = []
         l_data = [{'a': 1}, {'a': 1, 'b': 1}, {'a': 2}, {'b': 2}]
-        for i in range(3):
-            out_message = self.subpipeline_filter.process(l_data[i:(i + 3)])
+        for i in range(2):
+            out_message = self.subpipeline_filter.process({'data' : copy.deepcopy(l_data[i:(i + 3)])})
             l_out.append(out_message)
             logger.info(f'message: {out_message}')
 
-        self.assertDictEqual(l_out[0], {'count': {'a': 3, 'b': 1, 'c': 0}})
-        self.assertDictEqual(l_out[1], {'count': {'a': 2, 'b': 2, 'c': 0}})
+        self.assertDictEqual(l_out[0], {'count': {'a': 3, 'b': 1, 'c': 0}, 'data': [{'a': 2}, {'a': 2, 'b': 1}, {'a': 3}]})
+        self.assertDictEqual(l_out[1], {'count': {'a': 2, 'b': 2, 'c': 0}, 'data': [{'a': 2, 'b': 1}, {'a': 3}, {'b': 2}]})
 
     def test_process_2(self):
         l_out = []
         l_data = [{'a': 1}, {'a': 1, 'c': 1}, {'a': 2}, {'a': 3}]
         for i in range(2):
-            in_message = [copy.deepcopy(d) for d in l_data[i:(i + 3)]]
+            in_message = {'data' : [copy.deepcopy(d) for d in l_data[i:(i + 3)]]}
             out_message = self.subpipeline_filter.process(in_message)
             l_out.append(out_message)
+            logger.info(f'message: {out_message}')
 
-        self.assertDictEqual(l_out[0], {'a': 2, 'c': 1, 'KO_FILTER': 'MockFilter', 'count': {'a': 2, 'b': 0, 'c': 1}})
-        self.assertDictEqual(l_out[1], {'a': 2, 'c': 1, 'KO_FILTER': 'MockFilter', 'count': {'a': 1, 'b': 0, 'c': 1}})
+        self.assertDictEqual(l_out[0], {'data': [{'a': 2}, {'a': 1, 'c': 1}, {'a': 2}], 'KO_FILTER': 'MockFilter'})
+        self.assertDictEqual(l_out[1], {'data': [{'a': 1, 'c': 1}, {'a': 2}, {'a': 3}], 'KO_FILTER': 'MockFilter'})

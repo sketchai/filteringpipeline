@@ -9,7 +9,7 @@ General:
 Source_A:
   type: SourceList
   parms:
-    l_data: [[{'a' : 1}, {'a' : 1, 'b' : 1}, {'a' : 1}], [{'b' : 1}, {'a' : 1, 'b' : 1}, {'b' : 1}]]
+    l_data: []
 
 MockSubPipelineFilter:
   type: MockSubPipelineFilter
