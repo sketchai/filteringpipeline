@@ -3,7 +3,7 @@ import logging
 import copy
 
 
-from src.filters.catalog_filter.subpipeline_filter import SubPipelineFilter
+from filtering_pipeline.filters.catalog_filter.subpipeline_filter import SubPipelineFilter
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -15,4 +15,4 @@ class MockSubPipelineFilter(SubPipelineFilter):
     """
 
     def update_conf_pipeline(self, message) -> object:
-        return {self.source_name: {'parms': {'l_data': message}}}
+        return {self.source_name: {'parms': {'l_data': message.get('data')}}}

@@ -20,5 +20,5 @@ class SourceList(SourceFilter):
         logger.debug('Start generator')
         for elt in self.l_data:
             logger.debug(f'Element : {elt}')
-            yield elt
+            yield elt 
         logger.info('Stop generator')

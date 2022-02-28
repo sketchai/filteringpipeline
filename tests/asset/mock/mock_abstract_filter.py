@@ -1,7 +1,7 @@
 from typing import Dict
 import logging
-from src.filters.abstract_filter import AbstractFilter
-from src.filters import KO_FILTER_TAG
+from filtering_pipeline.filters.abstract_filter import AbstractFilter
+from filtering_pipeline import KO_FILTER_TAG
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -24,6 +24,11 @@ class MockFilter(AbstractFilter):
     def process(self, message: object) -> object:
         logger.debug(f'{self.__class__.__name__}: message received= {message}')
 
+        # Show how to use the KO_FILTER_TAG
+        if message.get('c'):
+            message.update({KO_FILTER_TAG: self.name})
+            return message 
+            
         # Show how to modify class state
         for label in self.l_label:
             if label in message:
@@ -33,9 +38,7 @@ class MockFilter(AbstractFilter):
         if message.get('a'):
             message['a'] += 1
 
-        # Show how to use the KO_FILTER_TAG
-        if message.get('c'):
-            message.update({KO_FILTER_TAG: self.name})
+
 
         return message
 

@@ -6,12 +6,13 @@ from collections import OrderedDict
 from typing import Dict, List
 
 from tests.asset.mock.mock_subpipeline_filter import MockSubPipelineFilter
-from src.filters.catalog_source.source_list import SourceList
 from tests.asset.mock.mock_abstract_filter import MockFilter
 from tests.asset.mock.mock_sink import MockSinkFilter
-from src.utils.to_dict import yaml_to_dict
 
-from src.filters.factory import config_parser, pipeline_factory
+from filtering_pipeline.filters.catalog_source.source_list import SourceList
+from filtering_pipeline.utils.to_dict import yaml_to_dict
+from filtering_pipeline.factory import config_parser, pipeline_factory
+
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -59,11 +60,12 @@ class TestFactory(unittest.TestCase):
         pipeline = pipeline_factory(conf=conf, catalog_filter=self.catalog_filters)
         last_message = pipeline.execute()
 
-        self.assertDictEqual(last_message, {'KO_FILTER': 'MockFilter', 'a': 3, 'b': 4, 'c': 5, 'count': {'a': 2, 'b': 1, 'c': 1}})
+        self.assertDictEqual(last_message, {'END_SOURCE': 'True', 'count': {'a': 3, 'b': 0, 'c': 0}})
         self.assertTrue(os.path.exists(self.output_path))  # Check that the file has been created at the end
 
     def test_pf_subpipeline(self):
         d_conf = yaml_to_dict('tests/asset/mock/mock_conf_subpipeline.yml')
+        d_conf['Source_A']['parms']['l_data'] = [{'data' : [{'a' : 1}, {'a' : 1, 'b' : 1}, {'a' : 1}]}, {'data' :[{'b' : 1}, {'a' : 1, 'b' : 1}, {'b' : 1}]}]
         pipeline = pipeline_factory(conf=d_conf, catalog_filter=self.catalog_filters)
         last_message = pipeline.execute()
 
