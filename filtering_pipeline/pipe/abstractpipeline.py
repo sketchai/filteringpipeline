@@ -1,20 +1,23 @@
 from typing import List, Dict
 import logging
 
-from .abstract_filter import AbstractFilter, SourceFilter
-from . import END_SOURCE_PIPELINE, KO_FILTER_TAG
+from ..filters.abstract_filter import AbstractFilter, SourceFilter
+from .. import END_SOURCE_PIPELINE, KO_FILTER_TAG
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
 
 
-class Pipeline(object):
+class AbstractPipeline(object):
 
     def __init__(self) -> None:
         self._filters: List = []
         self._source: SourceFilter = None
         self._sink: AbstractFilter = None
         self._pipeline_status: bool = False
+
+    def stop_pipeline(self) -> None :
+        self._pipeline_status = False 
 
     def add_source(self, source: AbstractFilter) -> bool:
         if source is not None:
@@ -42,33 +45,12 @@ class Pipeline(object):
         if self._sink is not None:
             if END_SOURCE_PIPELINE in message:
                 self._sink.last_process(message)
-            else:
+            elif not KO_FILTER_TAG in message:
                 self._sink.process(message)
 
+
     def execute(self) -> Dict:
-
-        while self._pipeline_status:
-            message = self._source.process()
-            logger.debug(f'message: {message}')
-            if END_SOURCE_PIPELINE in message:  # No more data in the source
-                self._pipeline_status = False
-                break
-            else:
-                for filter in self._filters:
-                    message = filter.process(message)
-                    if KO_FILTER_TAG in message:
-                        self._pipeline_status = False
-                        break
-                if self._pipeline_status:
-                    self._process_sink(message)
-
-        return self.generate_last_message(message)
+        raise NotImplementedError('Needs to be implemented')
 
     def generate_last_message(self, message: Dict = {}) -> Dict:
-        for filter in self._filters:
-            message = filter.last_process(message)
-            if KO_FILTER_TAG in message:
-                break
-        self._process_sink(message)
-        logger.debug(f'message : {message}')
-        return message
+        raise NotImplementedError('Needs to be implemented')

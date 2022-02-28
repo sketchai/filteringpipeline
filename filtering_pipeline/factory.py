@@ -2,8 +2,9 @@ from typing import Dict, List
 from collections import OrderedDict
 import copy
 
-from .pipeline import Pipeline
-from .abstract_filter import SourceFilter, AbstractFilter
+from .pipe import AbstractPipeline, Pipeline, SubPipeline, SUB_PIPELINE
+
+from .filters.abstract_filter import SourceFilter, AbstractFilter
 from . import GENERAL_CONF_PIPELINE
 
 import logging
@@ -59,13 +60,13 @@ def config_parser(conf: Dict) -> object:
     return source_config, filters_config, sink_config
 
 
-def pipeline_factory(conf: Dict, catalog_filter: Dict = None) -> Pipeline:
-    if catalog_filter is None:
-        from src.filters import CATALOG_FILTERS
-        catalog_filter = CATALOG_FILTERS
+def pipeline_factory(conf: Dict, catalog_filter: Dict = None, pipeline_type : str = None) -> AbstractPipeline:
     # Parse the conf file and create the Pipeline
     source_config, filters_config, sink_config = config_parser(conf)
-    pipeline = Pipeline()
+    if pipeline_type == SUB_PIPELINE :
+        pipeline = SubPipeline()
+    else :
+        pipeline = Pipeline()
 
     # Add source
     source = create_filter(source_config, catalog_filter)
