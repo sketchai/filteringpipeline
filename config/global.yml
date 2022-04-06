@@ -1,0 +1,45 @@
+path:
+  sketchgraphs_path: 'data/sg_t16_{}.npy'
+  coarse_path: 'out/coarse_grained_output_{}.npy'
+  normalization_path: 'out/normalization_output_{}.npy'
+  indexes_path: 'out/indexes_cluster_order_{}.json'
+  weights_path: 'out/sg_{}_weights.npy'
+  encoding_path: 'out/sg_{}_final.npy'
+  parameters_path: 'out/preprocessing_params.pkl'
+
+# TODO: set the params in the conf_xxx_pip.yml files
+# for now this is only used for the export_parameters()
+parameters:
+  lMax: 60
+  lMin: 5
+  dof_max: null
+  n_bins: 50
+
+keep:
+  l_keep_edge:
+    - !ConstraintType Coincident
+    - !ConstraintType Distance
+    - !ConstraintType Horizontal
+    - !ConstraintType Parallel
+    - !ConstraintType Vertical
+    - !ConstraintType Tangent
+    - !ConstraintType Length
+    - !ConstraintType Perpendicular
+    - !ConstraintType Midpoint
+    - !ConstraintType Equal
+    - !ConstraintType Diameter
+    - !ConstraintType Radius
+    - !ConstraintType Concentric
+    - !ConstraintType Angle
+    - !ConstraintType Subnode
+  
+  l_keep_node:
+    - !EntityType Point
+    - !EntityType Line
+    - !EntityType Circle
+    - !EntityType Arc
+    - !SubnodeType SN_Start
+    - !SubnodeType SN_End
+    - !SubnodeType SN_Center
+    - !EntityType External
+    - !EntityType Stop

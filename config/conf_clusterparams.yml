@@ -1,0 +1,40 @@
+General:
+  l_filters:
+    - FilterParamsEncoding
+    - FilterClusterParamValues
+    - FilterLog
+  source : SourceDict
+  sink : SinkArray
+  n_process : 1
+
+# Source
+SourceDict:
+  type: SourceDict
+  parms:
+    indexes: TO_COMPLETE
+    data: TO_COMPLETE
+
+FilterClusterParamValues:
+  type: FilterClusterParamValues
+  parms:
+    criterion: 'inconsistent'
+    threshold: 0.2
+    metric: 'cityblock'
+    
+FilterParamsEncoding:
+  type: FilterParamsEncoding
+  parms:
+    nodes_parametrized: TO_COMPLETE
+
+FilterLog:
+  type: FilterLog
+  parms:
+    output_path: 'out/logs'
+    clean_up: True
+
+# Sink
+SinkArray:
+  type: SinkArray
+  parms:
+    output_path: TO_COMPLETE
+    input_tag: 'weights'

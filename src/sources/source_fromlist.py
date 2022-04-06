@@ -1,6 +1,6 @@
 from typing import Dict
 import logging
-from ..filteringpipeline.src.filters.abstract_filter import SourceFilter
+from filtering_pipeline.filters.abstract_filter import SourceFilter
 
 
 logging.basicConfig(level=logging.DEBUG)

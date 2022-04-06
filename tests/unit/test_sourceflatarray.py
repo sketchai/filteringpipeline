@@ -1,9 +1,10 @@
-import unittest
-import logging
-
 import sys
-sys.path.append('src/sketchgraphs')
+sys.path.append('src/sketchgraphs/')
+sys.path.append('src/filtering-pipeline/')
+
 from src.sources.source_fromflatarray import SourceFromFlatArray
+import logging
+import unittest
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -15,7 +16,7 @@ class TestSource(unittest.TestCase):
     @classmethod
     def setUp(self):
         self.l_data = [1, 4, 5, 6]
-        self.source = SourceFromFlatArray(conf={'file_path': 'data/sg_t16_test.npy'})
+        self.source = SourceFromFlatArray(conf={'file_path': 'tests/asset/sg_t16_mini.npy'})
         self.nb_elements = 3
 
     def test_generator(self):

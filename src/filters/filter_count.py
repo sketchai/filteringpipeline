@@ -1,9 +1,9 @@
 from typing import Dict
 import logging
-from ..filteringpipeline.src.filters.abstract_filter import AbstractFilter
-from src.filteringpipeline.src.filters import KO_FILTER_TAG
+from filtering_pipeline.filters.abstract_filter import AbstractFilter
+from filtering_pipeline import KO_FILTER_TAG
 
-from src.sketchgraphs.sketchgraphs.data import sketch as datalib, sequence
+from sketchgraphs.data.sequence import NodeOp, EdgeOp
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -34,9 +34,9 @@ class FilterCount(AbstractFilter):
         self.max: int = conf_filter.get('max')
         type_str = conf_filter.get('type')
         if type_str == 'node':
-            self.type = sequence.NodeOp
+            self.type = NodeOp
         elif type_str == 'edge':
-            self.type = sequence.EdgeOp
+            self.type = EdgeOp
         else:
             raise Exception()
         self.count: int = 0
@@ -60,4 +60,5 @@ class FilterCount(AbstractFilter):
 
         if KO_flag:
             message.update({KO_FILTER_TAG: self.name})
+            logger.debug(f"Counted {self.count} not in [{self.min}, {self.max}]")
         return message

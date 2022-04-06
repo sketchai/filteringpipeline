@@ -1,0 +1,6 @@
+PATH_TO_MINI_SEQUENCE_DATA = 'tests/asset/sg_t16_mini.npy'
+MOCK_COARSE_PATH = 'tests/asset/out/coarse_grained_results.npy'
+MOCK_INDEXES_PATH = 'tests/asset/out/indexes_cluster_order.json'
+MOCK_NORMALIZATION_PATH = 'tests/asset/out/normalization_results.npy'
+MOCK_WEIGHTS_PATH = 'tests/asset/out/weights_results.npy'
+MOCK_ENCODING_PATH = 'tests/asset/out/encoding_results.npy'

@@ -1,16 +1,19 @@
 General:
-  l_filters: [OpSubPipelineFilter] 
-  source : Source_A
-  sink : None # Can be None
+  l_filters:
+    - OpSubPipelineFilter
+    - FilterDof
+    - FilterLog
+
+  source : SourceFromFlatArray
+  sink : SinkSlices
   n_process : 1
 
 
 # Source
-Source_A:
+SourceFromFlatArray:
   type: SourceFromFlatArray
   parms:
-    file_path: 'data/sg_t16_test.npy'
-    counter_for_test: 1
+    file_path: TO_COMPLETE
 
 # Pipeline Filters
 OpSubPipelineFilter:
@@ -18,7 +21,13 @@ OpSubPipelineFilter:
   source: SourceSub
   sink : None
   parms:
-    l_filters: [FilterCheckLabel]
+    l_filters:
+      - FilterCheckLabel
+      - FilterConstraintRefs
+      - FilterCount_MinEdge
+      - FilterCount_MinMaxNode
+      - FilterCheckParamsMetrics_Length
+      - FilterCheckParamsMetrics_Angle
 
 SourceSub:
   type : SourceList
@@ -30,11 +39,15 @@ FilterCheckLabel:
   parms :
     label_list: TO_COMPLETE
 
+FilterConstraintRefs:
+  type: FilterConstraintRefs
+  parms:
+    max_refs: 2
+
 FilterCount_MinEdge:
   type: FilterCount
   parms:
     min: 1
-    max: None
     type: 'edge'
 
 FilterCount_MinMaxNode:
@@ -44,23 +57,30 @@ FilterCount_MinMaxNode:
     max: 60
     type: 'node'
 
-FilterProcessParam_CheckLengthUnit:
-  type: FilterProcessParam
+FilterCheckParamsMetrics_Length:
+  type: FilterCheckParamsMetrics
   parms:
-    type: 'edge'
-    label: [3,8,12,14]
-    param: 'length'
-    format_dict:
-      '.* METER': None
+    request: TO_COMPLETE
 
-FilterProcessParam_CheckAngleUnit:
-  type: FilterProcessParam
+FilterCheckParamsMetrics_Angle:
+  type: FilterCheckParamsMetrics
   parms:
-    type: 'edge'
-    label: 17
-    param: 'angle'
-    format_dict:
-      '.* DEGREE': None
-    
-  
-  
+    request: TO_COMPLETE
+
+FilterDof:
+  type: FilterDof
+  parms:
+    max: null
+
+FilterLog:
+  type: FilterLog
+  parms:
+    output_path: 'out/logs'
+    clean_up: True
+
+# Sink
+SinkSlices:
+  type: SinkSlices
+  parms:
+    output_path: TO_COMPLETE
+    slice_length: 917979

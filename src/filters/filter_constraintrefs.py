@@ -1,9 +1,9 @@
 from typing import Dict
 import logging
-from ..filteringpipeline.src.filters.abstract_filter import AbstractFilter
-from src.filteringpipeline.src.filters import KO_FILTER_TAG
+from filtering_pipeline.filters.abstract_filter import AbstractFilter
+from filtering_pipeline import KO_FILTER_TAG
 
-from src.sketchgraphs.sketchgraphs.data.sequence import EdgeOp
+from sketchgraphs.data.sequence import EdgeOp
 
 
 logging.basicConfig(level=logging.DEBUG)

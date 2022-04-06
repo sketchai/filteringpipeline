@@ -1,0 +1,42 @@
+General:
+  l_filters:
+    - FilterEncodeOrder
+    - FilterSequenceOrderEncoding
+    - FilterClusterSequences
+    - FilterLog
+  source : SourceFromFlatArray
+  sink : SinkDict
+  n_process : 1
+
+# Source
+SourceFromFlatArray:
+  type: SourceFromFlatArray
+  parms:
+    file_path: TO_COMPLETE
+
+FilterEncodeOrder:
+  type: FilterEncodeOrder
+  parms:
+    l_keep_edge: TO_COMPLETE
+    l_keep_node: TO_COMPLETE
+
+FilterSequenceOrderEncoding:
+  type: FilterSequenceOrderEncoding
+  parms:
+
+FilterClusterSequences:
+  type: FilterClusterSequences
+  parms:
+
+FilterLog:
+  type: FilterLog
+  parms:
+    output_path: 'out/logs'
+    clean_up: True
+
+# Sink
+SinkDict:
+  type: SinkDict
+  parms:
+    input_tag: 'cluster_dict'
+    output_path: TO_COMPLETE

@@ -1,10 +1,13 @@
-import unittest
-import logging
+import sys
+sys.path.append('src/sketchgraphs/')
+sys.path.append('src/filtering-pipeline/')
 
-
+from filtering_pipeline import KO_FILTER_TAG
+from sketchgraphs.data.sequence import EdgeOp
 from src.filters.filter_constraintrefs import FilterConstraintRefs
-from src.sketchgraphs.sketchgraphs.data.sequence import EdgeOp
-from src.filteringpipeline.src.filters import KO_FILTER_TAG
+import logging
+import unittest
+
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
