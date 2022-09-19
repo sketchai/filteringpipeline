@@ -1,0 +1,26 @@
+General:
+  l_filters: [MockFilter] 
+  source : MySource
+  sink : Sink_A # Can be None
+  n_process : 1
+
+
+# Source
+MySource:
+  type: SourceList
+  parms:
+    l_data: [{'a' : 1}, {'a' : 2, 'b' : 4, 'c' : 5}, {'a' : 2} , {'a' : 2}]
+
+
+MockFilter:
+  type: MockFilter
+  parms:
+    l_label: ['a', 'b', 'c']
+
+Sink_A:
+  type: MockSink
+  parms:
+    output_path: 'tests/asset/out/my_data.txt'
+
+
+  

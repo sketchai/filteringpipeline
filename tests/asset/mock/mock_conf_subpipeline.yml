@@ -1,0 +1,36 @@
+General:
+  l_filters: [MockSubPipelineFilter] 
+  source : Source_A
+  sink : Sink_A # Can be None
+  n_process : 1
+
+
+# Source
+Source_A:
+  type: SourceList
+  parms:
+    l_data: []
+
+MockSubPipelineFilter:
+  type: MockSubPipelineFilter
+  source: Source_Sub
+  parms:
+    l_filters : [MockFilter]
+
+Source_Sub:
+  type: SourceList
+  parms:
+    l_data: []
+
+MockFilter:
+  type: MockFilter
+  parms:
+    l_label: ['a', 'b', 'c']
+
+Sink_A:
+  type: MockSink
+  parms:
+    output_path: 'tests/asset/out/my_data.txt'
+
+
+  
